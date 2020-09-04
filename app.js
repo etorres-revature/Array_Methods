@@ -46,6 +46,13 @@ function addData(obj) {
   updateDOM();
 }
 
+//sort users by most money
+function sortByRichest() {
+    data.sort((a, b) => b.money - a.money);
+
+    updateDOM();
+}
+
 //update DOM with new user;
 function updateDOM(providedData = data) {
   //clear main div
@@ -68,4 +75,5 @@ function updateDOM(providedData = data) {
 
 //even listeners
 addUserBtn.addEventListener("click", getRandomUser);
-doubleBtn.addEventListener("click", doubleMoney)
+doubleBtn.addEventListener("click", doubleMoney);
+sortBtn.addEventListener("click", sortByRichest)
