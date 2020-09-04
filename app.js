@@ -32,6 +32,12 @@ async function getRandomUser() {
   addData(newUser);
 }
 
+  //format number as money
+  //https://stackoverflow.com/questions/149055/how-to-format-numbers-as-currency-string
+  function formatMoney(number) {
+    return "$" + number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+  }
+
 //double eveyone's money
 function doubleMoney() {
     data = data.map(user => {
@@ -55,9 +61,20 @@ function sortByRichest() {
 
 //filter to display only millionaires in DOM
 function showMillionaires() {
-data = data.filter(user => user.money > 10000000);
+data = data.filter(user => user.money > 1000000);
 
 updateDOM();
+}
+
+//calculate total wealth
+function calculateTotalWealth() {
+const totalWealth = data.reduce((acc, user) => (acc += user.money), 0);
+
+// console.log(formatMoney(totalWealth));
+
+const totalWealthEl = document.createElement("div");
+totalWealthEl.innerHTML = `<h3>Total Wealth: <strong>${formatMoney(totalWealth)}</strong></h3>`
+mainEl.appendChild(totalWealthEl);
 }
 
 //update DOM with new user;
@@ -72,16 +89,11 @@ function updateDOM(providedData = data) {
     )}`;
     mainEl.appendChild(element);
   });
-
-  //format number as money
-  //https://stackoverflow.com/questions/149055/how-to-format-numbers-as-currency-string
-  function formatMoney(number) {
-    return "$" + number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
-  }
 }
 
 //even listeners
 addUserBtn.addEventListener("click", getRandomUser);
 doubleBtn.addEventListener("click", doubleMoney);
-sortBtn.addEventListener("click", sortByRichest)
-showMillionairesBtn.addEventListener("click", showMillionaires)
+sortBtn.addEventListener("click", sortByRichest);
+showMillionairesBtn.addEventListener("click", showMillionaires);
+calculateWealthBtn.addEventListener("click", calculateTotalWealth);
