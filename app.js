@@ -20,13 +20,40 @@ async function getRandomUser() {
   const res = await fetch("https://randomuser.me/api");
   const data = await res.json();
 
-//   console.log(data);
+  //   console.log(data);
 
-const user = data.results[0]
+  const user = data.results[0];
 
-const newUser = {
-    name: `${user.name.first} ${user.name.last}`, 
-    money: Math.floor(Math.random() * 1000000)
+  const newUser = {
+    name: `${user.name.first} ${user.name.last}`,
+    money: Math.floor(Math.random() * 1000000),
+  };
+  addData(newUser);
 }
-console.log(newUser);
+function addData(obj) {
+  data.push(obj);
+  updateDOM();
 }
+
+//update DOM with new user;
+function updateDOM(providedData = data) {
+  //clear main div
+  mainEl.innerHTML = `<h2><strong>Person</strong>Wealth</h2>`;
+  providedData.forEach((item) => {
+    const element = document.createElement("div");
+    element.classList.add("person");
+    element.innerHTML = `<strong>${item.name}</strong>${formatMoney(
+      item.money
+    )}`;
+    mainEl.appendChild(element);
+  });
+
+  //format number as money
+  //https://stackoverflow.com/questions/149055/how-to-format-numbers-as-currency-string
+  function formatMoney(number) {
+    return "$" + number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+  }
+}
+
+//even listeners
+addUserBtn.addEventListener("click", getRandomUser);
